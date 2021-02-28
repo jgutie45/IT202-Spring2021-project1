@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <title>App Shell</title>
-  <link rel="manifest" href="/manifest.json">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <style>
@@ -20,7 +20,6 @@
 </style>
 
 <body>
-  
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="topnav">
     <a class="navbar-brand" href="#">Land Inventory</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,30 +28,30 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a data-screen="Home" class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+          <a data-screen="Home" class="nav-link" href="#" id="Home">Home<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a data-screen="Form" class="nav-link" href="#">Form</a>
+          <a data-screen="Form" class="nav-link" href="#" id="Form">Form</a>
         </li>
         <li class="nav-item">
-          <a data-screen="Data" class="nav-link" href="#">Data</a>
+          <a data-screen="Data" class="nav-link" href="#" id="Data">Data</a>
         </li>
         <li class="nav-item">
-          <a data-screen="Map" class="nav-link" href="#">Map</a>
+          <a data-screen="Map" class="nav-link" href="#" id="Map">Map</a>
         </li>
         <li class="nav-item">
-          <a data-screen="About" class="nav-link" href="#">About</a>
+          <a data-screen="About" class="nav-link" href="#" id="About">About</a>
         </li>
       </ul>
     </div>
   </nav>
-  
+
   <div id="content">
-    <div class="screen" id="Home">Description of what the app does and how to use.</div>
-    <div class="screen" id="Form">A form to allow users to filter the data</div>
-    <div class="screen" id="Data">The data in a listing form (using cards or list items), displaying</div>
-    <div class="screen" id="Map">The data mapped, with markers and info windows.  The info window content should be the same as above.</div>
-    <div class="screen" id="About">Information about the app, including your name.</div>
+    <div class="screen" id="Home1">Description of what the app does and how to use.</div>
+    <div class="screen" id="Form1">A form to allow users to filter the data</div>
+    <div class="screen" id="Data1">The data in a listing form (using cards or list items), displaying</div>
+    <div class="screen" id="Map1">The data mapped, with markers and info windows.  The info window content should be the same as above.</div>
+    <div class="screen" id="About1">Information about the app, including your name.</div>
   </div>
 
   <div class="container">
@@ -60,29 +59,65 @@
       <div class="row">
         <div class="card" >
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <p class="card-text2">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link2">Another link</a>
+            <h5 class="card-title">community_area_name - pin</h5>
+            <h6 class="card-subtitle mb-2 text-muted">address - square footage</h6>
+            <p class="card-text"> pin</p>
           </div>
         </div>
       </div>
-    </div>
-
+    </div>  
 
   <script>
-    fetch("https://data.cityofchicago.org/resource/aksk-kvfp.json")
-    .then ( (response) => {return response.json()})
-    .then ( (result) => {
-     
-      result.sort((a,b) => (a.department > b.department) 
-      ? 1 : (a.department === b.department) 
-      ? ((a.size > b.size) ? 1 : -1) : -1)
 
+    document.querySelector("a.nav-link#Data").addEventListener ("click", (e) => {
+      fetch("https://data.cityofchicago.org/resource/aksk-kvfp.json")
+      .then ( (response) => {return response.json()})
+      .then ( (data) => {     
+            /*
+            community_area_name - pin
+            address - square footage
+            pin
+            */
+
+          console.log(data);
+          var i; 
+          for(i = 0; i <= data.length-1; i++ )
+            {
+              // 1)     clone the template card
+              var card = document.querySelector('.row');
+              let cardTemp = card.cloneNode(true);
+
+
+              // Check if Address is undefined and update with value not found
+              if(!data[i].hasOwnProperty("address")){
+                // DOES NOT EXIST
+                //console.log("ID: " + data[i].id + " address: " + data[i].address + " This DOES NOT EXIST");
+                data[i].address = 'no value supplied';
+              }
+
+              // Check if square footage not found
+              if(!data[i].hasOwnProperty("sq_ft")){
+                // DOES NOT EXIST
+                //console.log("ID: " + data[i].id + " sq_ft: " + data[i].sq_ft + " This DOES NOT EXIST");
+                data[i].sq_ft = 'no value supplied for';
+              }
+
+              //     use querySelector on the cloned item to find and update values
+              if(data[i].community_area_name == null){
+                cardTemp.querySelector(".card-title").textContent = "community value not found";
+              }
+              else
+                cardTemp.querySelector(".card-title").textContent = data[i].community_area_name;
+                cardTemp.querySelector(".card-subtitle").textContent = "Address: " + data[i].address + " - " + data[i].sq_ft + " square footage";
+                
+                cardTemp.querySelector(".card-text").textContent = "PIN: "+ data[i].pin;
+
+          // insert the clone into the parent of the template card
+              card.after(cardTemp);
+          }
+      });
     });
-  </script>
+ </script>
 
   <script>
     let Navanchors = document.querySelectorAll("a.nav-link");
@@ -98,34 +133,32 @@
         let screen = event.target.getAttribute("data-screen");
   
         // find the screen we are looking for
-        let targetScreen = document.querySelector("#" + screen);
-  
+        let targetScreen = document.querySelector("#" + screen + '1');
+
         // show the screen
         targetScreen.style.display = "block";
-        if(targetScreen == "#About")
-        {
-            console.log("hello");
-        }
-
+        
       });
     });
   </script>
-  
-  <script>
-    //API KEY:  AIzaSyBm3C2rC6906Nry7tLMzJk1X7yK7E4_bxQ
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(function(registration) {
-      // Registration was successful
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }).catch(function(err) {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  }
-  </script>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>
+  //API KEY:  AIzaSyBm3C2rC6906Nry7tLMzJk1X7yK7E4_bxQ
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(function(registration) {
+    // Registration was successful
+    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+  }).catch(function(err) {
+    // registration failed :(
+    console.log('ServiceWorker registration failed: ', err);
+  });
+}
+
+</script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
 </body>
 </html>
