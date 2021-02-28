@@ -16,6 +16,9 @@
 .screen{
   display: none;
 }
+.container{
+  display: none;
+}
 
 </style>
 
@@ -78,7 +81,8 @@
             address - square footage
             pin
             */
-
+          var hold = document.querySelector(".container");
+          hold.style.display = "block";
           console.log(data);
           var i; 
           for(i = 0; i <= data.length-1; i++ )
